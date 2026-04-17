@@ -445,7 +445,7 @@ CREATE TABLE order_items (
 
 ---
 
-### v2.0 — March 2026
+### v2.0 — April 2026
 
 - Premium homepage with animated hero, testimonials, newsletter
 - Marketplace: sticky pill filters, Quick View modal, low-stock badges
