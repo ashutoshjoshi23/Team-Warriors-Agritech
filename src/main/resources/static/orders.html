@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FarmConnect — My Orders & Invoices</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/navbar.css">
+    <link rel="stylesheet" href="css/footer.css">
+    <!-- jsPDF for PDF generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+    <style>
+        .orders-hero {
+            background: linear-gradient(135deg, #0a2e1e, #1B4332 50%, #2D6A4F);
+            padding: 55px 24px 75px; text-align: center; color: white; position: relative; overflow: hidden;
+        }
+        .orders-hero::before {
+            content:''; position:absolute; inset:0;
+            background:url('https://images.unsplash.com/photo-1505740420928-5e560c06d30e?q=80&w=2000') center/cover;
+            opacity:0.08;
+        }
+        .orders-hero > * { position:relative; z-index:1; }
+        .orders-hero h1 { color:white; font-family:'Playfair Display',serif; font-size:clamp(1.8rem,4vw,2.6rem); margin-bottom:10px; }
+        .orders-hero p { color:rgba(255,255,255,0.7); }
+
+        .orders-body { max-width:1100px; margin:-40px auto 0; padding:0 24px 80px; position:relative; z-index:2; }
+
+        /* Summary stats */
+        .orders-stats {
+            display:grid; grid-template-columns:repeat(4,1fr); gap:18px; margin-bottom:30px;
+        }
+        .ostat {
+            background:var(--bg-alt); border-radius:18px; padding:20px;
+            border:1px solid var(--border-color); box-shadow:var(--shadow-sm);
+            text-align:center;
+        }
+        .ostat-icon { font-size:1.5rem; margin-bottom:8px; }
+        .ostat-value { font-size:1.6rem; font-weight:800; color:var(--text-primary); }
+        .ostat-label { font-size:0.8rem; color:var(--text-secondary); font-weight:500; margin-top:2px; }
+
+        /* Filter bar */
+        .filter-bar {
+            background:var(--bg-alt); border-radius:16px; padding:16px 20px;
+            display:flex; align-items:center; gap:12px; margin-bottom:24px;
+            border:1px solid var(--border-color); flex-wrap:wrap;
+        }
+        .filter-bar label { font-weight:700; font-size:0.85rem; color:var(--text-secondary); }
+        .status-filter {
+            padding:8px 16px; border-radius:50px; border:2px solid var(--border-color);
+            background:var(--bg-color); color:var(--text-primary);
+            font-family:inherit; font-size:0.85rem; font-weight:600; cursor:pointer;
+            transition:all 0.2s;
+        }
+        .status-filter.active { border-color:var(--primary-color); background:var(--primary-color); color:white; }
+
+        /* Order cards */
+        .order-card {
+            background:var(--bg-alt); border-radius:20px;
+            border:1px solid var(--border-color); box-shadow:var(--shadow-sm);
+            margin-bottom:20px; overflow:hidden;
+            transition:box-shadow 0.3s;
+        }
+        .order-card:hover { box-shadow:var(--shadow-md); }
+
+        .order-header {
+            display:flex; justify-content:space-between; align-items:center;
+            padding:20px 24px; border-bottom:1px solid var(--border-color);
+            flex-wrap:wrap; gap:12px;
+        }
+        .order-id { font-weight:800; font-size:1.05rem; color:var(--text-primary); }
+        .order-date { font-size:0.85rem; color:var(--text-secondary); margin-top:3px; display:flex; align-items:center; gap:6px; }
+        .order-meta { display:flex; align-items:center; gap:14px; flex-wrap:wrap; }
+
+        .status-badge {
+            padding:6px 16px; border-radius:50px; font-size:0.78rem; font-weight:800;
+            text-transform:uppercase; letter-spacing:0.8px;
+        }
+        .s-PENDING_PAYMENT,.s-PENDING { background:#FEF3C7; color:#92400E; }
+        .s-CONFIRMED,.s-PAID         { background:#D1FAE5; color:#065F46; }
+        .s-SHIPPED                    { background:#DBEAFE; color:#1e40af; }
+        .s-DELIVERED,.s-COMPLETED     { background:#D1FAE5; color:#065F46; }
+        .s-CANCELLED                  { background:#FEE2E2; color:#991B1B; }
+        [data-theme="dark"] .s-PENDING_PAYMENT,[data-theme="dark"] .s-PENDING { background:rgba(245,158,11,0.2);color:#FCD34D; }
+        [data-theme="dark"] .s-CONFIRMED,[data-theme="dark"] .s-PAID { background:rgba(16,185,129,0.2);color:#6EE7B7; }
+        [data-theme="dark"] .s-SHIPPED { background:rgba(59,130,246,0.2);color:#93C5FD; }
+        [data-theme="dark"] .s-CANCELLED { background:rgba(239,68,68,0.2);color:#FCA5A5; }
+
+        .invoice-btn {
+            display:flex; align-items:center; gap:7px;
+            padding:9px 18px; border-radius:50px;
+            background:linear-gradient(135deg,var(--primary-color),var(--primary-light));
+            color:white; border:none; font-family:inherit; font-weight:700; font-size:0.85rem;
+            cursor:pointer; transition:all 0.25s;
+        }
+        .invoice-btn:hover { transform:translateY(-2px); box-shadow:0 6px 18px rgba(45,106,79,0.3); }
+
+        .order-items-list { padding:20px 24px; }
+        .order-item-row {
+            display:flex; align-items:center; gap:14px;
+            padding:12px 0; border-bottom:1px solid var(--border-color);
+        }
+        .order-item-row:last-child { border-bottom:none; }
+        .order-item-row img { width:52px; height:52px; border-radius:10px; object-fit:cover; flex-shrink:0; border:2px solid var(--border-color); }
+        .oitem-name { font-weight:700; font-size:0.95rem; }
+        .oitem-meta { font-size:0.82rem; color:var(--text-secondary); margin-top:2px; }
+        .oitem-price { margin-left:auto; font-weight:800; color:var(--primary-color); }
+
+        .order-footer {
+            background:var(--bg-color); padding:16px 24px;
+            display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;
+        }
+        .order-total { font-size:1.15rem; font-weight:800; }
+        .order-total span { color:var(--primary-color); font-size:1.3rem; }
+
+        /* Empty state */
+        .empty-state {
+            text-align:center; padding:80px 20px; background:var(--bg-alt);
+            border-radius:20px; border:1px solid var(--border-color);
+        }
+        .empty-state i { font-size:3rem; color:var(--border-color); margin-bottom:18px; display:block; }
+
+        @media(max-width:700px) {
+            .orders-stats { grid-template-columns:1fr 1fr; }
+            .order-header { flex-direction:column; align-items:flex-start; }
+        }
+        @media(max-width:480px) {
+            .orders-body { padding:0 14px 60px; }
+            .orders-stats { grid-template-columns:1fr 1fr; gap:12px; }
+        }
+    </style>
+</head>
+<body>
+    <div id="global-loader"><div class="spinner"></div></div>
+    <div id="navbar-container"></div>
+
+    <!-- Hero -->
+    <div class="orders-hero">
+        <div class="animate-up">
+            <h1><i class="fa-solid fa-boxes-stacked" style="margin-right:10px;"></i>My Orders</h1>
+            <p>Track orders, view invoices & download bills — just like D-Mart!</p>
+        </div>
+    </div>
+
+    <div class="orders-body">
+        <!-- Stats row -->
+        <div class="orders-stats animate-up">
+            <div class="ostat">
+                <div class="ostat-icon" style="color:var(--primary-color);">💰</div>
+                <div class="ostat-value" id="ostTotal">₹0</div>
+                <div class="ostat-label">Total Spent</div>
+            </div>
+            <div class="ostat">
+                <div class="ostat-icon" style="color:#3b82f6;">📦</div>
+                <div class="ostat-value" id="ostOrders">0</div>
+                <div class="ostat-label">Total Orders</div>
+            </div>
+            <div class="ostat">
+                <div class="ostat-icon" style="color:#f59e0b;">⏳</div>
+                <div class="ostat-value" id="ostPending">0</div>
+                <div class="ostat-label">Pending</div>
+            </div>
+            <div class="ostat">
+                <div class="ostat-icon" style="color:#22c55e;">✅</div>
+                <div class="ostat-value" id="ostDone">0</div>
+                <div class="ostat-label">Delivered</div>
+            </div>
+        </div>
+
+        <!-- Filter bar -->
+        <div class="filter-bar animate-up" style="animation-delay:0.1s;">
+            <label><i class="fa-solid fa-filter"></i> Filter:</label>
+            <button class="status-filter active" data-filter="ALL">All</button>
+            <button class="status-filter" data-filter="PENDING_PAYMENT">Pending Payment</button>
+            <button class="status-filter" data-filter="CONFIRMED">Confirmed</button>
+            <button class="status-filter" data-filter="SHIPPED">Shipped</button>
+            <button class="status-filter" data-filter="DELIVERED">Delivered</button>
+            <button class="status-filter" data-filter="CANCELLED">Cancelled</button>
+        </div>
+
+        <!-- Orders list -->
+        <div id="ordersList" class="animate-up" style="animation-delay:0.15s;">
+            <div class="empty-state">
+                <i class="fa-solid fa-spinner fa-spin" style="color:var(--primary-color);"></i>
+                <p>Loading your orders...</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="footer-container"></div>
+    <script src="js/utils.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/orders.js"></script>
+</body>
+</html>

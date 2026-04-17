@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FarmConnect — My Cart</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/navbar.css">
+    <link rel="stylesheet" href="css/footer.css">
+    <style>
+        .cart-hero {
+            background: linear-gradient(135deg, #0a2e1e, #1B4332, #2D6A4F);
+            padding: 50px 24px 75px; text-align: center; position: relative; overflow: hidden;
+        }
+        .cart-hero::before { content:''; position:absolute; inset:0; background:url('https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?q=80&w=2000') center/cover; opacity:0.08; }
+        .cart-hero > * { position:relative; z-index:1; }
+        .cart-hero h1 { color:white; font-family:'Playfair Display',serif; font-size:clamp(1.8rem,4vw,2.5rem); margin-bottom:8px; }
+        .cart-hero p { color:rgba(255,255,255,0.7); }
+
+        .cart-body { max-width: 1100px; margin: -40px auto 0; padding: 0 24px 80px; position: relative; z-index: 2; }
+        .cart-layout { display: grid; grid-template-columns: 1fr 360px; gap: 25px; align-items: start; }
+
+        /* Cart Items */
+        .cart-card { background: var(--bg-alt); border-radius: 20px; border: 1px solid var(--border-color); box-shadow: var(--shadow-sm); overflow: hidden; }
+        .cart-card-header { padding: 20px 24px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; }
+        .cart-card-title { font-size: 1.1rem; font-weight: 700; display: flex; align-items: center; gap: 10px; }
+        .cart-card-title i { color: var(--primary-color); }
+        .clear-cart-btn { font-size: 0.82rem; color: var(--danger); background: none; border: none; cursor: pointer; font-weight: 600; font-family: inherit; }
+        .clear-cart-btn:hover { text-decoration: underline; }
+
+        /* Cart Item Row */
+        .cart-item {
+            display: flex; align-items: center; gap: 16px;
+            padding: 18px 24px; border-bottom: 1px solid var(--border-color);
+            transition: background 0.2s;
+        }
+        .cart-item:last-child { border-bottom: none; }
+        .cart-item:hover { background: rgba(45,106,79,0.03); }
+        .cart-item-img { width: 70px; height: 70px; border-radius: 14px; object-fit: cover; flex-shrink: 0; border: 2px solid var(--border-color); }
+        .cart-item-info { flex: 1; }
+        .cart-item-name { font-weight: 700; font-size: 1rem; color: var(--text-primary); margin-bottom: 4px; }
+        .cart-item-farmer { font-size: 0.8rem; color: var(--text-secondary); }
+        .cart-item-price { font-size: 0.9rem; color: var(--primary-color); font-weight: 700; margin-top: 4px; }
+
+        /* Qty control */
+        .qty-ctrl { display: flex; align-items: center; gap: 0; border: 2px solid var(--border-color); border-radius: 12px; overflow: hidden; }
+        .qty-btn { width: 36px; height: 36px; border: none; background: var(--bg-color); color: var(--text-primary); cursor: pointer; font-size: 0.9rem; transition: all 0.2s; display: flex; align-items: center; justify-content: center; }
+        .qty-btn:hover { background: var(--primary-color); color: white; }
+        .qty-display { width: 40px; text-align: center; font-weight: 800; font-size: 0.95rem; background: var(--bg-alt); color: var(--text-primary); }
+
+        .cart-item-total { font-weight: 800; color: var(--text-primary); font-size: 1rem; width: 80px; text-align: right; }
+        .remove-btn { background: none; border: none; color: var(--danger); cursor: pointer; font-size: 1rem; padding: 6px; border-radius: 8px; transition: all 0.2s; }
+        .remove-btn:hover { background: rgba(239,68,68,0.1); }
+
+        /* Empty cart */
+        .empty-cart { padding: 60px 24px; text-align: center; }
+        .empty-cart i { font-size: 3.5rem; color: var(--border-color); margin-bottom: 20px; display: block; }
+        .empty-cart h3 { font-size: 1.4rem; margin-bottom: 8px; }
+
+        /* Summary card */
+        .summary-card { background: var(--bg-alt); border-radius: 20px; border: 1px solid var(--border-color); box-shadow: var(--shadow-sm); padding: 28px; position: sticky; top: 80px; }
+        .summary-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 20px; padding-bottom: 14px; border-bottom: 1px solid var(--border-color); display: flex; align-items: center; gap: 8px; }
+        .summary-title i { color: var(--primary-color); }
+
+        .summary-row { display: flex; justify-content: space-between; padding: 9px 0; color: var(--text-secondary); font-size: 0.9rem; }
+        .summary-row.total { border-top: 2px solid var(--border-color); margin-top: 10px; padding-top: 16px; font-size: 1.15rem; font-weight: 800; color: var(--text-primary); }
+        .summary-row.total span:last-child { color: var(--primary-color); }
+
+        /* Coins banner */
+        .coins-banner { background: linear-gradient(135deg, #854d0e, #d97706); border-radius: 14px; padding: 14px 18px; margin-bottom: 18px; display: flex; align-items: center; gap: 12px; color: white; }
+        .coins-banner i { font-size: 1.5rem; }
+        .coins-banner-text { font-size: 0.85rem; font-weight: 600; }
+        .coins-banner-text span { font-size: 1rem; font-weight: 800; }
+
+        /* Coupon input */
+        .coupon-row { display: flex; gap: 8px; margin: 16px 0; }
+        .coupon-input { flex: 1; padding: 10px 14px; border: 2px solid var(--border-color); border-radius: 12px; background: var(--bg-color); color: var(--text-primary); font-family: inherit; font-size: 0.88rem; outline: none; text-transform: uppercase; }
+        .coupon-input:focus { border-color: var(--primary-color); }
+        .coupon-btn { padding: 10px 16px; border-radius: 12px; background: var(--primary-color); color: white; border: none; font-family: inherit; font-weight: 700; font-size: 0.85rem; cursor: pointer; transition: all 0.2s; white-space: nowrap; }
+        .coupon-btn:hover { background: var(--primary-dark); }
+
+        .checkout-btn { width: 100%; padding: 16px; border-radius: 16px; background: linear-gradient(135deg, #1B4332, #2D6A4F, #40916C); color: white; border: none; font-family: inherit; font-weight: 800; font-size: 1.05rem; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 8px 25px rgba(45,106,79,0.3); margin-top: 6px; }
+        .checkout-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 30px rgba(45,106,79,0.4); }
+        .checkout-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+        .trust-row { display: flex; justify-content: center; gap: 16px; margin-top: 14px; flex-wrap: wrap; }
+        .trust-item { font-size: 0.78rem; color: var(--text-secondary); display: flex; align-items: center; gap: 5px; font-weight: 600; }
+        .trust-item i { color: var(--primary-color); }
+
+        /* Suggested products */
+        .suggestions { background: var(--bg-alt); border-radius: 20px; border: 1px solid var(--border-color); box-shadow: var(--shadow-sm); padding: 24px; margin-top: 24px; }
+        .suggest-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 14px; margin-top: 18px; }
+        .suggest-card { border-radius: 14px; overflow: hidden; border: 1px solid var(--border-color); cursor: pointer; transition: all 0.3s; background: var(--bg-color); }
+        .suggest-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); }
+        .suggest-card img { width: 100%; height: 90px; object-fit: cover; }
+        .suggest-info { padding: 10px; }
+        .suggest-name { font-size: 0.82rem; font-weight: 700; margin-bottom: 4px; }
+        .suggest-price { font-size: 0.85rem; color: var(--primary-color); font-weight: 800; }
+        .suggest-add { width: 100%; padding: 6px; background: var(--primary-color); color: white; border: none; border-radius: 8px; font-family: inherit; font-size: 0.78rem; font-weight: 700; cursor: pointer; margin-top: 6px; transition: all 0.2s; display:flex; align-items:center; justify-content:center; gap:5px; }
+        .suggest-add:hover { background: var(--primary-dark); }
+
+        /* Empty cart */
+        .empty-cart { padding: 50px 24px; text-align: center; }
+        .empty-cart-icon { width: 100px; height: 100px; border-radius: 50%; background: linear-gradient(135deg, rgba(45,106,79,0.1), rgba(45,106,79,0.2)); display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; }
+        .empty-cart-icon i { font-size: 2.5rem; color: var(--primary-color); }
+        .empty-cart h3 { font-size: 1.4rem; margin-bottom: 8px; }
+        .empty-cart p { color: var(--text-secondary); line-height: 1.6; }
+        .cat-pill { display: inline-flex; align-items: center; gap: 6px; padding: 8px 18px; border-radius: 50px; background: var(--bg-alt); border: 2px solid var(--border-color); color: var(--text-primary); font-size: 0.85rem; font-weight: 700; text-decoration: none; transition: all 0.2s; }
+        .cat-pill:hover { border-color: var(--primary-color); color: var(--primary-color); background: rgba(45,106,79,0.06); }
+
+        @media (max-width: 850px) { .cart-layout { grid-template-columns: 1fr; } .summary-card { position: static; } }
+        @media (max-width: 540px) { .cart-body { padding: 0 14px 60px; } .suggest-grid { grid-template-columns: 1fr 1fr; } .cart-item { gap: 12px; padding: 14px 16px; } }
+    </style>
+</head>
+<body>
+    <div id="global-loader"><div class="spinner"></div></div>
+    <div id="navbar-container"></div>
+
+    <div class="cart-hero">
+        <div class="animate-up">
+            <h1><i class="fa-solid fa-cart-shopping" style="margin-right:10px;"></i>Your Cart</h1>
+            <p>Review your fresh picks before heading to checkout</p>
+        </div>
+    </div>
+
+    <div class="cart-body">
+        <div class="cart-layout">
+            <!-- LEFT: Items -->
+            <div class="animate-up">
+                <div class="cart-card" id="cartCard">
+                    <div class="cart-card-header">
+                        <div class="cart-card-title"><i class="fa-solid fa-basket-shopping"></i> Cart Items <span id="cartCount" style="background:var(--primary-color);color:white;padding:2px 10px;border-radius:50px;font-size:0.8rem;margin-left:6px;">0</span></div>
+                        <button class="clear-cart-btn" onclick="clearAllCart()"><i class="fa-solid fa-trash"></i> Clear All</button>
+                    </div>
+                    <div id="cartItemsBody">
+                        <div class="empty-cart">
+                            <i class="fa-solid fa-spinner fa-spin" style="color:var(--primary-color);"></i>
+                            <p>Loading your cart...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Suggested products -->
+                <div class="suggestions animate-up" style="animation-delay:0.1s;" id="suggestionsSection" style="display:none;">
+                    <div style="display:flex;justify-content:space-between;align-items:center;">
+                        <h3 style="font-size:1rem;font-weight:700;display:flex;align-items:center;gap:8px;"><i class="fa-solid fa-bolt" style="color:var(--primary-color);"></i> You Might Also Like</h3>
+                        <a href="products.html" style="font-size:0.82rem;font-weight:700;color:var(--primary-color);">Browse All</a>
+                    </div>
+                    <div class="suggest-grid" id="suggestGrid"></div>
+                </div>
+            </div>
+
+            <!-- RIGHT: Summary -->
+            <div class="animate-up" style="animation-delay:0.1s;">
+                <div class="summary-card">
+                    <div class="summary-title"><i class="fa-solid fa-receipt"></i> Order Summary</div>
+
+                    <!-- Farm Coins earned -->
+                    <div class="coins-banner" id="coinsPreview" style="display:none;">
+                        <i class="fa-solid fa-coins"></i>
+                        <div class="coins-banner-text">You'll earn <span id="coinsToEarn">0</span> Farm Coins on this order!</div>
+                    </div>
+
+                    <!-- Free shipping progress -->
+                    <div class="free-ship-bar">
+                        <div class="free-ship-text" id="shipText">Add <span id="shipNeeded">₹0</span> more for Free Delivery!</div>
+                        <div class="progress-bar"><div class="progress-fill" id="shipProgress" style="width:0%"></div></div>
+                    </div>
+
+                    <!-- Coupon -->
+                    <div class="coupon-row">
+                        <input type="text" class="coupon-input" id="couponInput" placeholder="COUPON CODE">
+                        <button class="coupon-btn" onclick="applyCoupon()">Apply</button>
+                    </div>
+                    <div id="couponMsg" style="font-size:0.82rem;margin-bottom:10px;"></div>
+
+                    <div class="summary-row"><span>Subtotal</span><span id="sumSubtotal">₹0</span></div>
+                    <div class="summary-row" id="discountRow" style="display:none;color:var(--success);"><span>Discount</span><span id="sumDiscount">-₹0</span></div>
+                    <div class="summary-row"><span id="deliveryLabel">Delivery</span><span id="sumShipping" style="color:var(--success);font-weight:700;">FREE</span></div>
+                    <div class="summary-row"><span>GST (8%)</span><span id="sumGST">₹0</span></div>
+                    <div class="summary-row total"><span>Total</span><span id="sumTotal">₹0</span></div>
+
+                    <button class="checkout-btn" id="checkoutBtn" onclick="window.location.href='checkout.html'">
+                        <i class="fa-solid fa-shield-halved"></i> Proceed to Checkout
+                    </button>
+
+                    <div class="trust-row">
+                        <div class="trust-item"><i class="fa-solid fa-lock"></i> Secure</div>
+                        <div class="trust-item"><i class="fa-solid fa-truck"></i> Free Delivery</div>
+                        <div class="trust-item"><i class="fa-solid fa-rotate-left"></i> Easy Returns</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="footer-container"></div>
+    <script src="js/utils.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/cart.js"></script>
+</body>
+</html>

@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FarmConnect — About Us</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/navbar.css">
+    <link rel="stylesheet" href="css/footer.css">
+    <style>
+        .about-hero {
+            background: linear-gradient(135deg, #0a2e1e 0%, #1B4332 50%, #2D6A4F 100%);
+            padding: 100px 20px; text-align: center; color: white;
+            position: relative; overflow: hidden;
+        }
+        .about-hero::before {
+            content: ''; position: absolute; inset: 0;
+            background: url('https://images.unsplash.com/photo-1500937386664-56d1dfef3854?q=80&w=2000&auto=format&fit=crop') center/cover;
+            opacity: 0.2;
+        }
+        .about-hero > * { position: relative; z-index: 1; }
+        .about-hero h1 { color: white; font-size: 3.5rem; font-family: 'Playfair Display', serif; margin-bottom: 20px; }
+        .about-hero p { color: rgba(255,255,255,0.85); font-size: 1.2rem; max-width: 600px; margin: 0 auto; line-height: 1.8; }
+
+        .mission-section { padding: 100px 20px; }
+        .mission-grid { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+        .mission-img { border-radius: 24px; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.15); }
+        .mission-img img { width: 100%; height: 450px; object-fit: cover; transition: transform 0.5s ease; }
+        .mission-img:hover img { transform: scale(1.05); }
+        .mission-tag { display: inline-block; background: #D8F3DC; color: #1B4332; padding: 6px 16px; border-radius: 50px; font-size: 0.85rem; font-weight: 700; margin-bottom: 20px; }
+        .mission-content h2 { font-size: 2.5rem; font-family: 'Playfair Display', serif; margin-bottom: 20px; }
+        .mission-content p { color: var(--text-secondary); line-height: 1.9; font-size: 1.05rem; margin-bottom: 15px; }
+
+        .stats-row { display: flex; gap: 30px; margin-top: 40px; flex-wrap: wrap; }
+        .stat-box { text-align: center; flex: 1; min-width: 100px; padding: 20px; background: var(--bg-alt); border-radius: 16px; border: 1px solid var(--border-color); }
+        .stat-box h3 { font-size: 2rem; color: var(--primary-color); margin-bottom: 4px; }
+        .stat-box p { color: var(--text-secondary); font-size: 0.85rem; }
+
+        .values-section { padding: 100px 20px; background: var(--bg-alt); }
+        .values-grid { max-width: 1100px; margin: 60px auto 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; }
+        .value-card {
+            padding: 40px 30px; border-radius: 20px;
+            background: var(--bg-color); border: 1px solid var(--border-color);
+            transition: all 0.3s ease; text-align: center;
+        }
+        .value-card:hover { transform: translateY(-8px); box-shadow: var(--shadow-lg); }
+        .value-icon {
+            width: 72px; height: 72px; border-radius: 20px; margin: 0 auto 20px;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+            display: flex; align-items: center; justify-content: center;
+            color: white; font-size: 1.8rem; box-shadow: 0 8px 20px rgba(45,106,79,0.25);
+        }
+        .value-card h3 { font-size: 1.2rem; margin-bottom: 12px; }
+        .value-card p { color: var(--text-secondary); line-height: 1.7; font-size: 0.95rem; }
+
+        .team-section { padding: 100px 20px; }
+        .team-grid { max-width: 1100px; margin: 60px auto 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; }
+        .team-card { text-align: center; }
+        .team-avatar {
+            width: 100px; height: 100px; border-radius: 50%;
+            margin: 0 auto 16px; border: 3px solid var(--primary-light);
+            overflow: hidden;
+        }
+        .team-avatar img { width: 100%; height: 100%; object-fit: cover; }
+        .team-card h4 { font-size: 1.05rem; margin-bottom: 4px; }
+        .team-card p { color: var(--text-secondary); font-size: 0.9rem; }
+
+        .cta-section {
+            padding: 100px 20px;
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary-color));
+            text-align: center;
+        }
+        .cta-section h2 { color: white; font-size: 2.5rem; font-family: 'Playfair Display', serif; margin-bottom: 16px; }
+        .cta-section p { color: rgba(255,255,255,0.8); margin-bottom: 40px; font-size: 1.1rem; }
+        .cta-btns { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; }
+        .cta-btn-white { padding: 16px 36px; border-radius: 50px; font-weight: 700; font-size: 1.05rem; background: white; color: var(--primary-color); text-decoration: none; transition: all 0.3s ease; }
+        .cta-btn-white:hover { background: #D8F3DC; transform: translateY(-3px); }
+        .cta-btn-outline { padding: 16px 36px; border-radius: 50px; font-weight: 700; font-size: 1.05rem; background: transparent; color: white; border: 2px solid rgba(255,255,255,0.5); text-decoration: none; transition: all 0.3s ease; }
+        .cta-btn-outline:hover { background: rgba(255,255,255,0.15); color: white; transform: translateY(-3px); }
+
+        @media (max-width: 900px) {
+            .mission-grid { grid-template-columns: 1fr; }
+            .values-grid { grid-template-columns: 1fr 1fr; }
+            .team-grid { grid-template-columns: repeat(2, 1fr); }
+            .about-hero h1 { font-size: 2.5rem; }
+        }
+        @media (max-width: 600px) {
+            .values-grid, .team-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div id="global-loader"><div class="spinner"></div></div>
+    <div id="navbar-container"></div>
+
+    <!-- HERO -->
+    <div class="about-hero">
+        <div class="animate-up">
+            <h1>Our Mission</h1>
+            <p>We believe everyone deserves access to fresh, healthy, and organic produce — straight from the hands that grow it.</p>
+        </div>
+    </div>
+
+    <!-- MISSION -->
+    <section class="mission-section">
+        <div class="mission-grid">
+            <div class="mission-img animate-up">
+                <img src="https://images.unsplash.com/photo-1500937386664-56d1dfef3854?q=80&w=1000&auto=format&fit=crop" alt="Farming Community">
+            </div>
+            <div class="mission-content animate-up" style="animation-delay:0.15s;">
+                <span class="mission-tag">🌾 Our Story</span>
+                <h2>Connecting Communities, One Harvest at a Time</h2>
+                <p>At FarmConnect, we bridge the gap between hard-working local farmers and the families who rely on their harvest. By removing middlemen, we ensure farmers receive fair prices while giving families a transparent, trustworthy food source.</p>
+                <p>It's not just Farm-to-Table — it's <strong>Neighbor-to-Neighbor</strong>. Every purchase you make directly supports a farmer's livelihood and a sustainable agricultural ecosystem in India.</p>
+                <div class="stats-row">
+                    <div class="stat-box">
+                        <h3>500+</h3><p>Local Farmers</p>
+                    </div>
+                    <div class="stat-box">
+                        <h3>20k+</h3><p>Happy Families</p>
+                    </div>
+                    <div class="stat-box">
+                        <h3>100%</h3><p>Organic</p>
+                    </div>
+                    <div class="stat-box">
+                        <h3>15+</h3><p>States Covered</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- VALUES -->
+    <section class="values-section">
+        <div style="text-align:center;" class="animate-up">
+            <div style="color:var(--primary-color); font-weight:700; text-transform:uppercase; letter-spacing:3px; font-size:0.85rem;">What Drives Us</div>
+            <h2 style="font-size:2.5rem; font-family:'Playfair Display',serif; margin-top:10px;">Our Core <span style="color:var(--primary-color);">Values</span></h2>
+        </div>
+        <div class="values-grid">
+            <div class="value-card animate-up">
+                <div class="value-icon"><i class="fa-solid fa-leaf"></i></div>
+                <h3>Sustainability First</h3>
+                <p>We only partner with farmers who practice sustainable, chemical-free agriculture that respects the earth and future generations.</p>
+            </div>
+            <div class="value-card animate-up" style="animation-delay:0.1s;">
+                <div class="value-icon"><i class="fa-solid fa-handshake"></i></div>
+                <h3>Farmer Empowerment</h3>
+                <p>Fair prices, timely payments, and zero exploitation. Our farmers are our heroes and we make sure they're treated that way.</p>
+            </div>
+            <div class="value-card animate-up" style="animation-delay:0.2s;">
+                <div class="value-icon"><i class="fa-solid fa-shield-halved"></i></div>
+                <h3>Quality Guarantee</h3>
+                <p>Every product is quality checked before listing. We stand behind every purchase with our freshness guarantee or full refund.</p>
+            </div>
+            <div class="value-card animate-up" style="animation-delay:0.3s;">
+                <div class="value-icon"><i class="fa-solid fa-truck-fast"></i></div>
+                <h3>Lightning Fast Delivery</h3>
+                <p>From farm to doorstep within 24 hours. Our cold-chain logistics ensure produce arrives as fresh as it was picked.</p>
+            </div>
+            <div class="value-card animate-up" style="animation-delay:0.4s;">
+                <div class="value-icon"><i class="fa-solid fa-users"></i></div>
+                <h3>Community Building</h3>
+                <p>We foster a community of conscious consumers who understand where their food comes from and care about its impact.</p>
+            </div>
+            <div class="value-card animate-up" style="animation-delay:0.5s;">
+                <div class="value-icon"><i class="fa-solid fa-earth-asia"></i></div>
+                <h3>Made in India</h3>
+                <p>100% homegrown platform supporting Indian agriculture, Indian farmers, and Indian families — Vocal for Local.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- TEAM -->
+    <section class="team-section">
+        <div style="text-align:center;" class="animate-up">
+            <div style="color:var(--primary-color); font-weight:700; text-transform:uppercase; letter-spacing:3px; font-size:0.85rem;">The Builders</div>
+            <h2 style="font-size:2.5rem; font-family:'Playfair Display',serif; margin-top:10px;">Meet the <span style="color:var(--primary-color);">Team</span></h2>
+            <p style="color:var(--text-secondary); margin-top:10px;">Built with ❤️ by Team Warriors at NMIET, Pune</p>
+        </div>
+        <div class="team-grid">
+            <div class="team-card animate-up">
+                <div class="team-avatar"><img src="https://ui-avatars.com/api/?name=Aditya+Borse&background=2D6A4F&color=fff&size=200" alt="Aditya"></div>
+                <h4>Aditya Borse</h4><p>Frontend &amp; UI/UX</p>
+            </div>
+            <div class="team-card animate-up" style="animation-delay:0.1s;">
+                <div class="team-avatar"><img src="https://ui-avatars.com/api/?name=Shreyash+Hajare&background=40916C&color=fff&size=200" alt="Shreyash"></div>
+                <h4>Shreyash Hajare</h4><p>Backend, Database &amp; APIs</p>
+            </div>
+            <div class="team-card animate-up" style="animation-delay:0.2s;">
+                <div class="team-avatar"><img src="https://ui-avatars.com/api/?name=Ashutosh+Joshi&background=1B4332&color=fff&size=200" alt="Ashutosh"></div>
+                <h4>Ashutosh Joshi</h4><p>Full Stack Developer</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta-section">
+        <div class="animate-up">
+            <h2>Join the Movement</h2>
+            <p>Whether you're looking to buy fresh produce or sell your harvest, there's a place for you here.</p>
+            <div class="cta-btns">
+                <a href="signup.html" class="cta-btn-white">Get Started Free</a>
+                <a href="products.html" class="cta-btn-outline">Browse Marketplace</a>
+            </div>
+        </div>
+    </section>
+
+    <div id="footer-container"></div>
+    <script src="js/utils.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

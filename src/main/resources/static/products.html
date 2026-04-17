@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FarmConnect — Fresh Marketplace</title>
+    <meta name="description" content="Browse fresh organic produce from local Indian farmers.">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/navbar.css">
+    <link rel="stylesheet" href="css/footer.css">
+    <link rel="stylesheet" href="css/products.css">
+    <style>
+        /* ======= HERO ======= */
+        .market-hero {
+            background: linear-gradient(135deg, #0a2e1e 0%, #1B4332 60%, #2D6A4F 100%);
+            padding: 60px 20px 70px;
+            text-align: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        .market-hero::before {
+            content: '';
+            position: absolute; inset: 0;
+            background: url('https://images.unsplash.com/photo-1488459716781-31db52582fe9?q=80&w=2000') center/cover;
+            opacity: 0.12;
+        }
+        .market-hero > * { position: relative; z-index: 1; }
+        .market-hero h1 {
+            color: white;
+            font-size: clamp(1.8rem, 4vw, 2.8rem);
+            font-family: 'Playfair Display', serif;
+            margin-bottom: 10px;
+        }
+        .market-hero p {
+            color: rgba(255,255,255,0.8);
+            font-size: clamp(0.9rem, 2vw, 1.1rem);
+        }
+
+        /* ======= STICKY FILTER BAR ======= */
+        .filter-wrap {
+            background: var(--bg-alt);
+            border-bottom: 1px solid var(--border-color);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            position: sticky;
+            top: 0;
+            z-index: 900;
+        }
+        .filter-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 14px 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .search-wrap {
+            position: relative;
+            flex: 1;
+            min-width: 180px;
+            max-width: 340px;
+        }
+        .search-wrap i {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+        .search-wrap input {
+            width: 100%;
+            padding: 10px 14px 10px 38px;
+            border: 2px solid var(--border-color);
+            border-radius: 50px;
+            background: var(--bg-color);
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: 0.9rem;
+            outline: none;
+            transition: all 0.3s;
+        }
+        .search-wrap input:focus { border-color: var(--primary-color); }
+
+        .pills { display: flex; gap: 8px; flex-wrap: wrap; flex: 1; }
+        .cat-pill {
+            padding: 8px 18px;
+            border-radius: 50px;
+            border: 2px solid var(--border-color);
+            background: var(--bg-color);
+            color: var(--text-secondary);
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.25s ease;
+        }
+        .cat-pill:hover { border-color: var(--primary-color); color: var(--primary-color); }
+        .cat-pill.active {
+            border-color: var(--primary-color);
+            background: var(--primary-color);
+            color: white;
+        }
+        .sort-select {
+            padding: 10px 14px;
+            border-radius: 12px;
+            border: 2px solid var(--border-color);
+            background: var(--bg-color);
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: 0.85rem;
+            outline: none;
+            cursor: pointer;
+            min-width: 160px;
+        }
+
+        /* ======= BLINKIT INLINE QTY CONTROL ======= */
+        .inline-qty-ctrl {
+            display: flex; align-items: center; gap: 0;
+            background: var(--primary-color);
+            border-radius: 12px; overflow: hidden;
+            box-shadow: 0 4px 12px rgba(45,106,79,0.35);
+            transition: all 0.2s;
+        }
+        .iq-btn {
+            width: 36px; height: 36px;
+            background: none; border: none;
+            color: white; cursor: pointer;
+            font-size: 0.85rem; font-weight: 700;
+            display: flex; align-items: center; justify-content: center;
+            transition: background 0.15s;
+        }
+        .iq-btn:hover { background: rgba(0,0,0,0.15); }
+        .iq-num {
+            min-width: 32px; text-align: center;
+            color: white; font-weight: 800; font-size: 0.95rem;
+            background: rgba(0,0,0,0.12);
+            padding: 0 6px; height: 36px;
+            display: flex; align-items: center; justify-content: center;
+        }
+
+        /* ======= MAIN LAYOUT ======= */
+        .market-body {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px 24px 60px;
+        }
+        .market-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 28px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .results-count {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+        .results-count strong { color: var(--text-primary); }
+
+        /* ======= RESPONSIVE PRODUCT GRID ======= */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 22px;
+        }
+
+        /* TV / Large screens */
+        @media (min-width: 1600px) {
+            .products-grid { grid-template-columns: repeat(5, 1fr); }
+        }
+        /* Desktop */
+        @media (max-width: 1300px) {
+            .products-grid { grid-template-columns: repeat(3, 1fr); }
+        }
+        /* Tablet landscape */
+        @media (max-width: 900px) {
+            .products-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+            .filter-inner { padding: 12px 16px; }
+        }
+        /* Mobile */
+        @media (max-width: 540px) {
+            .products-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+            .search-wrap { max-width: 100%; }
+            .market-body { padding: 20px 14px 50px; }
+            .cat-pill { padding: 7px 12px; font-size: 0.8rem; }
+        }
+        /* Very small phones */
+        @media (max-width: 360px) {
+            .products-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+        }
+
+        /* ======= EMPTY STATE ======= */
+        .empty-state {
+            text-align: center;
+            padding: 80px 20px;
+            grid-column: 1 / -1;
+        }
+        .empty-state i {
+            font-size: 3rem;
+            color: var(--border-color);
+            margin-bottom: 16px;
+            display: block;
+        }
+        .empty-state h3 { font-size: 1.3rem; margin-bottom: 8px; }
+        .empty-state p { color: var(--text-secondary); }
+
+        /* ======= QUICK VIEW MODAL ======= */
+        .modal {
+            position: fixed;
+            z-index: 10001;
+            inset: 0;
+            background: rgba(0,0,0,0.75);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(8px);
+            padding: 16px;
+        }
+        .modal.active { display: flex; }
+        .modal-box {
+            background: var(--bg-alt);
+            border-radius: 24px;
+            width: 100%;
+            max-width: 860px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 40px 100px rgba(0,0,0,0.4);
+            animation: modalIn 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+        }
+        @keyframes modalIn { from { opacity:0; transform: scale(0.88) translateY(30px); } to { opacity:1; transform: scale(1) translateY(0); } }
+        .modal-inner { display: grid; grid-template-columns: 1fr 1fr; }
+        .modal-img { min-height: 380px; }
+        .modal-img img { width: 100%; height: 100%; object-fit: cover; border-radius: 24px 0 0 24px; }
+        .modal-details { padding: 40px 36px; display: flex; flex-direction: column; }
+        .modal-close {
+            position: absolute; top: 14px; right: 14px;
+            width: 38px; height: 38px; border-radius: 50%;
+            background: rgba(0,0,0,0.35); border: none; color: white;
+            font-size: 1rem; cursor: pointer; z-index: 2;
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.2s;
+        }
+        .modal-close:hover { background: var(--danger); transform: scale(1.1); }
+        .modal-cat-badge { display: inline-block; background: rgba(45,106,79,0.1); color: var(--primary-color); padding: 4px 12px; border-radius: 50px; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; }
+        .modal-title { font-size: 1.8rem; font-family: 'Playfair Display', serif; margin: 10px 0 6px; }
+        .modal-farmer { color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 20px; display: flex; align-items: center; gap: 8px; }
+        .modal-price { font-size: 2rem; font-weight: 800; color: var(--primary-color); margin-bottom: 16px; }
+        .modal-desc { color: var(--text-secondary); line-height: 1.8; margin-bottom: 30px; flex: 1; font-size: 0.95rem; }
+        .modal-btns { display: flex; gap: 10px; }
+
+        @media (max-width: 700px) {
+            .modal-inner { grid-template-columns: 1fr; }
+            .modal-img { min-height: 220px; }
+            .modal-img img { border-radius: 24px 24px 0 0; }
+            .modal-details { padding: 24px 20px; }
+            .modal-title { font-size: 1.4rem; }
+        }
+    </style>
+</head>
+<body>
+    <div id="global-loader"><div class="spinner"></div></div>
+    <div id="navbar-container"></div>
+
+    <!-- HERO -->
+    <div class="market-hero">
+        <div class="animate-up">
+            <h1><i class="fa-solid fa-store" style="margin-right:10px;"></i>Fresh Marketplace</h1>
+            <p>Browse our curated selection of organic goods straight from local farmers</p>
+        </div>
+    </div>
+
+    <!-- STICKY FILTER BAR (inside body flow → stays fixed relative to viewport via sticky) -->
+    <div class="filter-wrap">
+        <div class="filter-inner">
+            <div class="search-wrap">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="searchInput" placeholder="Search products...">
+            </div>
+            <div class="pills">
+                <button class="cat-pill active" data-cat="all">All</button>
+                <button class="cat-pill" data-cat="Vegetables">🥦 Vegetables</button>
+                <button class="cat-pill" data-cat="Fruits">🍎 Fruits</button>
+                <button class="cat-pill" data-cat="Dairy">🥛 Dairy</button>
+                <button class="cat-pill" data-cat="Others">🍯 Others</button>
+            </div>
+            <select class="sort-select" id="sortSelect">
+                <option value="default">Sort: Default</option>
+                <option value="price-asc">Price: Low → High</option>
+                <option value="price-desc">Price: High → Low</option>
+                <option value="name-asc">Name: A–Z</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- PRODUCTS BODY -->
+    <div class="market-body">
+        <div class="market-top">
+            <p class="results-count">Showing <strong id="resultCount">...</strong> products</p>
+        </div>
+        <div id="productsGrid" class="products-grid">
+            <div class="empty-state">
+                <i class="fa-solid fa-spinner fa-spin" style="color:var(--primary-color);"></i>
+                <h3>Loading products...</h3>
+            </div>
+        </div>
+    </div>
+
+    <!-- QUICK VIEW MODAL -->
+    <div id="quickPreviewModal" class="modal">
+        <div class="modal-box">
+            <button class="modal-close" id="closeModalBtn"><i class="fa-solid fa-xmark"></i></button>
+            <div class="modal-inner">
+                <div class="modal-img">
+                    <img id="mpImg" src="" alt="Product Image">
+                </div>
+                <div class="modal-details">
+                    <span id="mpCat" class="modal-cat-badge"></span>
+                    <h2 id="mpTitle" class="modal-title"></h2>
+                    <div id="mpFarmer" class="modal-farmer"></div>
+                    <div id="mpPrice" class="modal-price"></div>
+                    <p id="mpDesc" class="modal-desc"></p>
+                    <div class="modal-btns">
+                        <button id="mpAddBtn" class="btn btn-primary" style="flex:1;">
+                            <i class="fa-solid fa-cart-plus"></i> Add to Cart
+                        </button>
+                        <a id="mpDetailsLink" href="#" class="btn btn-outline" style="padding:12px 16px;">
+                            <i class="fa-solid fa-eye"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="footer-container"></div>
+
+    <script src="js/utils.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/products.js"></script>
+</body>
+</html>
