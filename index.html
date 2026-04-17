@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farmer Marketplace - Home</title>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/navbar.css">
+    <link rel="stylesheet" href="css/footer.css">
+</head>
+<body>
+    <!-- Global Loader -->
+    <div id="global-loader" style="position:fixed; top:0; left:0; width:100%; height:100%; background:var(--background); display:flex; justify-content:center; align-items:center; z-index:9999; transition: opacity 0.3s ease;">
+        <i class="fa-solid fa-seedling fa-spin fa-3x" style="color:var(--primary);"></i>
+    </div>
+
+    <div id="navbar-container"></div>
+
+    <main>
+        <section class="hero-section" style="padding: 100px 20px; text-align: center; background: linear-gradient(135deg, var(--bg-offset), var(--background));">
+            <h1 style="font-size: 3.5rem; margin-bottom: 20px; color: var(--primary); font-family: 'Playfair Display', serif;">Fresh from Farm to Table</h1>
+            <p style="font-size: 1.2rem; color: var(--text-muted); max-width: 600px; margin: 0 auto 30px; line-height: 1.6;">Discover the finest organic produce straight from local farmers. Sustainable, fresh, and delivered to your doorstep.</p>
+            <a href="products.html" class="btn" style="padding: 15px 35px; font-size: 1.1rem; background: var(--primary); color: white; border-radius: 30px; text-decoration: none; display: inline-block; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(45, 106, 79, 0.3); font-weight: 500;">
+                <i class="fa-solid fa-basket-shopping"></i> Shop Now
+            </a>
+        </section>
+
+        <section class="features-section" style="padding: 80px 20px; max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px;">
+            <div class="feature-card" style="text-align:center; padding: 40px 30px; border-radius: 16px; background: var(--bg-offset); box-shadow: 0 10px 30px rgba(0,0,0,0.05); transition: transform 0.3s ease;">
+                <div style="width: 80px; height: 80px; background: rgba(45, 106, 79, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; color: var(--primary);">
+                    <i class="fa-solid fa-leaf fa-2x"></i>
+                </div>
+                <h3 style="font-size: 1.5rem; margin-bottom: 15px; color: var(--text-main);">100% Organic</h3>
+                <p style="color: var(--text-muted); line-height: 1.6;">We ensure all our listed farmers meet strict organic farming standards without harmful chemicals.</p>
+            </div>
+            <div class="feature-card" style="text-align:center; padding: 40px 30px; border-radius: 16px; background: var(--bg-offset); box-shadow: 0 10px 30px rgba(0,0,0,0.05); transition: transform 0.3s ease;">
+                <div style="width: 80px; height: 80px; background: rgba(45, 106, 79, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; color: var(--primary);">
+                    <i class="fa-solid fa-truck-fast fa-2x"></i>
+                </div>
+                <h3 style="font-size: 1.5rem; margin-bottom: 15px; color: var(--text-main);">Fast Delivery</h3>
+                <p style="color: var(--text-muted); line-height: 1.6;">From the farm directly to your kitchen within 24 hours to maintain ultimate freshness.</p>
+            </div>
+            <div class="feature-card" style="text-align:center; padding: 40px 30px; border-radius: 16px; background: var(--bg-offset); box-shadow: 0 10px 30px rgba(0,0,0,0.05); transition: transform 0.3s ease;">
+                <div style="width: 80px; height: 80px; background: rgba(45, 106, 79, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; color: var(--primary);">
+                    <i class="fa-solid fa-handshake fa-2x"></i>
+                </div>
+                <h3 style="font-size: 1.5rem; margin-bottom: 15px; color: var(--text-main);">Fair Trade</h3>
+                <p style="color: var(--text-muted); line-height: 1.6;">We eliminate the middlemen so that our farmers get the true and fair value of their hard work.</p>
+            </div>
+        </section>
+    </main>
+
+    <div id="footer-container"></div>
+
+    <!-- Scripts -->
+    <script src="js/utils.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
