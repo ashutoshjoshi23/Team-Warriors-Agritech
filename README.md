@@ -474,8 +474,8 @@ CREATE TABLE order_items (
 | Name             | Role                        |
 |------------------|-----------------------------|
 | Aditya Borse     | Testing and Quality Assurance |
-| Shreyash Hajare  | Frontend Development, UI/UX |
-| Ashutosh Joshi   | Full-Stack Development       |
+| Shreyash Hajare  | Backend Development & Database Management|
+| Ashutosh Joshi   | Full-Stack Development & AI    |
 
 **Institution:** Nutan Maharashtra Institute of Engineering and Technology (NMIET), Talegaon Dabhade, Pune — 410507
 
